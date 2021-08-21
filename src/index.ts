@@ -1,10 +1,16 @@
-import { generateInputType } from './input-type';
+import { generateStringFieldUpdateOperationsInputType } from './inputs/string-field-update-operation-input'
+import { generateUpdateInputType } from './inputs/update-input'
+import { generateCreateInputType } from './inputs/create-input'
+import { generateWhereInputType } from './inputs/where-input'
+import { generateOrderByInputType } from './inputs/order-by-input'
+import { generateWhereUniqueInputType } from './inputs/where-unique-input'
+import { generateListInputType } from './inputs/list-input-type'
+import { generateSortOrderType } from './inputs/sort-order.input'
 import { generateResolver } from './resolver'
 import { generateNestMain } from './nest-main'
 import { generatePrismaService } from './prisma-service'
 import { generateService } from './service'
 import { generateEntity } from './entity'
-import { generateModule } from './module'
 import { generatePrismaModule } from './prisma-module'
 import { generatorHandler } from '@prisma/generator-helper'
 import { generateNestCli } from './nest-cli'
@@ -21,16 +27,22 @@ generatorHandler({
         try {
             await generatePrismaModule()
             await generatePrismaService()
-            await generateNestMain()
-            await generateNestCli()
+            // await generateNestMain()
+            // await generateNestCli()
+            await generateStringFieldUpdateOperationsInputType()
+            await generateSortOrderType()
             await Promise.all(
                 models.map(async model => {
                     const { name, fields } = model
                     await generateEntity({ name, fields })
                     await generateService({ name })
                     await generateResolver({ name })
-                    await generateModule({ name })
-                    await generateInputType({ name })
+                    await generateListInputType({ name })
+                    await generateWhereUniqueInputType({ name, fields })
+                    await generateOrderByInputType({ name, fields })
+                    await generateWhereInputType({ name, fields })
+                    await generateCreateInputType({ name, fields })
+                    await generateUpdateInputType({ name, fields })
                 })
             )
         } catch (e) {

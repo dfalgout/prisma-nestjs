@@ -2,19 +2,17 @@ import * as fs from 'fs'
 import * as path from 'path'
 
 const nestMainSchema = () => {
-  const cls = `import { NestApplication, NestFactory } from '@nestjs/core'
+  const cls = `import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
-import { PrismaService } from '../generated/prisma/prisma.service'
+import { PrismaService } from 'generated/prisma/prisma.service'
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestApplication>(
-    AppModule,
-  )
+  const app = await NestFactory.create(AppModule)
 
   const prismaService: PrismaService = app.get(PrismaService)
   prismaService.enableShutdownHooks(app)
 
-  await app.listen(8080)
+  await app.listen(3000)
 }
 bootstrap()
 `

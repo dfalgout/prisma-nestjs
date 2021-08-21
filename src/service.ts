@@ -4,27 +4,32 @@ import * as path from 'path'
 const serviceSchema = ({ name }) => {
   const lowercasedName = name.toLowerCase()
   const entity = `${name}Entity`
-  const serviceName = `${name}Service`
-  const whereUniqueInput = `${name}WhereUniqueInput`
-  const whereInput = `${name}WhereInput`
-  const orderByInput = `${name}OrderByInput`
-  const createInput = `${name}CreateInput`
-  const updateInput = `${name}UpdateInput`
-  const cls = `import { Injectable, Logger } from '@nestjs/common'
+  const serviceName = `${name}CRUDService`
+  const whereUniqueInput = `${name}WhereUniqueInputArg`
+  const listInput = `${name}ListInputArg`
+  const createInput = `${name}CreateInputArg`
+  const updateInput = `${name}UpdateInputArg`
+  const whereUniqueInputKey = `${lowercasedName}WhereUniqueInputArg`
+  const listInputKey = `${lowercasedName}ListInputArg`
+  const createInputKey = `${lowercasedName}CreateInputArg`
+  const updateInputKey = `${lowercasedName}UpdateInputArg`
+  const cls = `import { Logger } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
-import { Prisma } from '@prisma/client'
+import { ${whereUniqueInput} } from './inputs/${lowercasedName}-where-unique.input'
 import { ${entity} } from './${lowercasedName}.entity'
+import { ${updateInput} } from './inputs/${lowercasedName}-update.input'
+import { ${listInput} } from './inputs/${lowercasedName}-list.input'
+import { ${createInput} } from './inputs/${lowercasedName}-create.input'
 
-@Injectable()
-export class ${serviceName} {
+export abstract class ${serviceName} {
   private readonly logger = new Logger(${serviceName}.name) 
 
-  constructor(private prisma: PrismaService) {}
+  constructor(readonly prisma: PrismaService) {}
 
-  async ${lowercasedName}(${lowercasedName}WhereUniqueInput: Prisma.${whereUniqueInput}): Promise<${entity} | null> {
+  async ${lowercasedName}(${whereUniqueInputKey}: ${whereUniqueInput}): Promise<${entity} | null> {
     try {
-      return this.prisma.${lowercasedName}.findUnique({
-        where: ${lowercasedName}WhereUniqueInput,
+      return await this.prisma.${lowercasedName}.findUnique({
+        where: ${whereUniqueInputKey},
       })
     } catch (e) {
       this.logger.error(e)
@@ -32,45 +37,29 @@ export class ${serviceName} {
     return null
   }
 
-  async ${lowercasedName}s(params: {
-    skip?: number
-    take?: number
-    cursor?: Prisma.${whereUniqueInput}
-    where?: Prisma.${whereInput}
-    orderBy?: Prisma.${orderByInput}
-  }): Promise<${entity}[]> {
-    const { skip, take, cursor, where, orderBy } = params
-
+  async ${lowercasedName}s(${listInputKey}: ${listInput}): Promise<${entity}[] | null> {
     try {
-      return this.prisma.${lowercasedName}.findMany({
-        skip,
-        take,
-        cursor,
-        where,
-        orderBy,
-      })
+      return await this.prisma.${lowercasedName}.findMany(${listInputKey})
     } catch (e) {
       this.logger.error(e)
     }
     return null
   }
 
-  async create${name}(data: Prisma.${createInput}): Promise<${entity}> {
+  async create${name}(${createInputKey}: ${createInput}): Promise<${entity}> {
     return this.prisma.${lowercasedName}.create({
-      data,
+      data: ${createInputKey},
     })
   }
 
-  async update${name}(params: {
-    where: Prisma.${whereUniqueInput}
-    data: Prisma.${updateInput}
-  }): Promise<${entity}> {
-    const { where, data } = params
-
+  async update${name}(
+    ${updateInputKey}: ${updateInput},
+    ${whereUniqueInputKey}: ${whereUniqueInput}
+  ): Promise<${entity} | null> {
     try {
-      return this.prisma.${lowercasedName}.update({
-        data,
-        where,
+      return await this.prisma.${lowercasedName}.update({
+        data: ${updateInputKey},
+        where: ${whereUniqueInputKey},
       })
     } catch (e) {
       this.logger.error(e)
@@ -78,10 +67,10 @@ export class ${serviceName} {
     return null
   }
 
-  async delete${name}(where: Prisma.${whereUniqueInput}): Promise<${entity}> {
+  async delete${name}(${whereUniqueInputKey}: ${whereUniqueInput}): Promise<${entity} | null> {
     try {
-      return this.prisma.${lowercasedName}.delete({
-        where,
+      return await this.prisma.${lowercasedName}.delete({
+        where: ${whereUniqueInputKey},
       })
     } catch (e) {
       this.logger.error(e)

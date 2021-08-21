@@ -2,16 +2,13 @@ import * as fs from 'fs'
 import * as path from 'path'
 
 const prismaModuleSchema = () => {
-  const cls = `import { Module } from '@nestjs/common'
+  const cls = `import { Global, Module } from '@nestjs/common'
   import { PrismaService } from './prisma.service'
   
+  @Global()
   @Module({
-    providers: [
-      PrismaService
-    ],
-    exports: [
-      PrismaService
-    ]
+    providers: [PrismaService],
+    exports: [PrismaService]
   })
   export class PrismaModule {}
 `

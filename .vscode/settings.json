@@ -1,0 +1,11 @@
+{
+    "eslint.format.enable": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true,
+        // "source.organizeImports": true
+    },
+    "autoimport.useSemiColon": false,
+    "autoimport.doubleQuotes": false,
+    "autoimport.spaceBetweenBraces": true,
+    "autoimport.autoComplete": false
+}

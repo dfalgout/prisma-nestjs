@@ -5,39 +5,39 @@ const resolverSchema = ({ name }) => {
   const lowercasedName = name.toLowerCase()
   const entity = `${name}Entity`
   const serviceName = `${lowercasedName}Service`
-  const whereUniqueInput = `${name}WhereUniqueInput`
-  const listInput = `${name}ListInput`
-  const whereInput = `${name}WhereInput`
-  const orderByInput = `${name}OrderByInput`
-  const cls = `import { NotFoundException, PreconditionFailedException, Logger } from '@nestjs/common'
+  const whereUniqueInput = `${name}WhereUniqueInputArg`
+  const listInput = `${name}ListInputArg`
+  const whereInput = `${name}WhereInputArg`
+  const orderByInput = `${name}OrderByInputArg`
+  const whereUniqueInputKey = `${lowercasedName}WhereUniqueInputArg`
+  const listInputKey = `${lowercasedName}ListInputArg`
+  const cls = `import { NotFoundException, PreconditionFailedException } from '@nestjs/common'
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
-import { ${name}Service } from './${lowercasedName}.service'
+import { ${name}CRUDService } from './${lowercasedName}.service'
 import { ${entity} } from './${lowercasedName}.entity'
-import { ${name}ListInput } from './inputs/${lowercasedName}-list.input'
-import { Prisma } from '@prisma/client'
+import { UserWhereUniqueInputArg } from './inputs/user-where-unique.input'
+import { ${name}ListInputArg } from './inputs/${lowercasedName}-list.input'
 
 @Resolver(() => ${entity})
-export class ${name}Resolver {
-  private readonly logger = new Logger(${name}Resolver.name)
-
+export abstract class ${name}CRUDResolver {
   constructor(
-    private readonly ${serviceName}: ${name}Service,
+    readonly ${serviceName}: ${name}CRUDService,
   ) {}
 
   @Query(() => ${entity})
   async ${lowercasedName}(
-    @Args('input') input: Prisma.${whereUniqueInput},
+    @Args('input') ${whereUniqueInputKey}: ${whereUniqueInput},
   ): Promise<${entity} | null> {
-    const ${lowercasedName} = await this.${serviceName}.${lowercasedName}(input)
+    const ${lowercasedName} = await this.${serviceName}.${lowercasedName}(${whereUniqueInputKey})
     if (!${lowercasedName}) throw new NotFoundException('${name} not found')
     return ${lowercasedName}
   }
 
   @Query(() => [${entity}])
   async ${lowercasedName}s(
-    @Args('input') input: ${listInput},
+    @Args('input', { nullable: true }) ${listInputKey}: ${listInput},
   ): Promise<${entity}[]> {
-    const ${lowercasedName}s = await this.${serviceName}.${lowercasedName}s(input)
+    const ${lowercasedName}s = await this.${serviceName}.${lowercasedName}s(${listInputKey})
     if (!${lowercasedName}s) throw new NotFoundException('No ${name}s not found')
     return ${lowercasedName}s
   }
