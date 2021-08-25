@@ -23,12 +23,12 @@ export class PrismaService extends PrismaClient
   return cls
 }
 
-export const generatePrismaService = async () => {
-  await fs.promises.mkdir(path.join('./generated', 'prisma'), {
+export const generatePrismaService = async ({ output }) => {
+  await fs.promises.mkdir(path.join(output, 'prisma'), {
     recursive: true,
   })
   await fs.promises.writeFile(
-      path.join('./generated', 'prisma', 'prisma.service.ts'),
+      path.join(output, 'prisma', 'prisma.service.ts'),
       serviceSchema(),
   )
 }

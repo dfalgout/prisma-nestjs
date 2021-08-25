@@ -15,12 +15,12 @@ registerEnumType(SortOrder, { name: 'SortOrder' })
   return cls
 }
 
-export const generateSortOrderType = async () => {
-  await fs.promises.mkdir(path.join('./generated', 'inputs'), {
+export const generateSortOrderType = async ({ output }) => {
+  await fs.promises.mkdir(path.join(output, 'inputs'), {
     recursive: true,
   })
   await fs.promises.writeFile(
-      path.join('./generated', 'inputs', `sort-order.input.ts`),
+      path.join(output, 'inputs', `sort-order.input.ts`),
       sortOrderSchema(),
   )
 }

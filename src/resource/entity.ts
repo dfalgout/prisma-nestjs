@@ -1,4 +1,4 @@
-import { printField, isAnnotatedWith } from './utils/field-helpers';
+import { printField, isAnnotatedWith } from '../utils/field-helpers';
 import * as fs from 'fs'
 import * as path from 'path'
 
@@ -26,12 +26,12 @@ ${orderedFields.map(field => printField(field)).join('\n')}
   return cls
 }
 
-export const generateEntity = async ({ name, fields }) => {
-  await fs.promises.mkdir(path.join('./generated', `${name.toLowerCase()}`), {
+export const generateEntity = async ({ name, fields, output }) => {
+  await fs.promises.mkdir(path.join(output, `${name.toLowerCase()}`), {
     recursive: true,
   })
   await fs.promises.writeFile(
-      path.join('./generated', `${name.toLowerCase()}`, `${name.toLowerCase()}.entity.ts`),
+      path.join(output, `${name.toLowerCase()}`, `${name.toLowerCase()}.entity.ts`),
       entitySchema({ name, fields }),
   )
 }

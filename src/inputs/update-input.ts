@@ -24,12 +24,12 @@ ${orderedFields.map(field => `  ${fieldNameOptional(field)}`).join('\n')}
   return cls
 }
 
-export const generateUpdateInputType = async ({ name, fields }) => {
-  await fs.promises.mkdir(path.join('./generated', `${name.toLowerCase()}`, 'inputs'), {
+export const generateUpdateInputType = async ({ name, fields, output }) => {
+  await fs.promises.mkdir(path.join(output, `${name.toLowerCase()}`, 'inputs'), {
     recursive: true,
   })
   await fs.promises.writeFile(
-      path.join('./generated', `${name.toLowerCase()}`, 'inputs', `${name.toLowerCase()}-update.input.ts`),
+      path.join(output, `${name.toLowerCase()}`, 'inputs', `${name.toLowerCase()}-update.input.ts`),
       updateInputSchema({ name, fields }),
   )
 }

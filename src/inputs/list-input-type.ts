@@ -24,12 +24,12 @@ export class ${name}ListInputArg {
   return cls
 }
 
-export const generateListInputType = async ({ name }) => {
-  await fs.promises.mkdir(path.join('./generated', `${name.toLowerCase()}`, 'inputs'), {
+export const generateListInputType = async ({ name, output }) => {
+  await fs.promises.mkdir(path.join(output, `${name.toLowerCase()}`, 'inputs'), {
     recursive: true,
   })
   await fs.promises.writeFile(
-      path.join('./generated', `${name.toLowerCase()}`, 'inputs', `${name.toLowerCase()}-list.input.ts`),
+      path.join(output, `${name.toLowerCase()}`, 'inputs', `${name.toLowerCase()}-list.input.ts`),
       listInputTypeSchema({ name }),
   )
 }

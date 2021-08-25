@@ -12,12 +12,12 @@ export class StringFieldUpdateOperationsInputArg implements Prisma.StringFieldUp
   return cls
 }
 
-export const generateStringFieldUpdateOperationsInputType = async () => {
-  await fs.promises.mkdir(path.join('./generated', 'inputs'), {
+export const generateStringFieldUpdateOperationsInputType = async ({ output }) => {
+  await fs.promises.mkdir(path.join(output, 'inputs'), {
     recursive: true,
   })
   await fs.promises.writeFile(
-      path.join('./generated', 'inputs', 'string-field-update-operations.input.ts'),
+      path.join(output, 'inputs', 'string-field-update-operations.input.ts'),
       stringFieldUpdateOperationsInputSchema(),
   )
 }

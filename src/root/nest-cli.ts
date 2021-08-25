@@ -4,7 +4,8 @@ import * as path from 'path'
 const nestCliSchema = () => {
   const cls = `{
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
+  "entryFile": "./src/main",
+  "sourceRoot": ".",
   "compilerOptions": {
     "plugins": ["@nestjs/graphql"]
   }
@@ -14,12 +15,12 @@ const nestCliSchema = () => {
   return cls
 }
 
-export const generateNestCli = async () => {
-  await fs.promises.mkdir(path.join('./generated', 'override'), {
+export const generateNestCli = async ({ output }) => {
+  await fs.promises.mkdir(path.join(output), {
     recursive: true,
   })
   await fs.promises.writeFile(
-      path.join('./generated', 'override', 'nest-cli.json'),
+      path.join(output, 'nest-cli.json'),
       nestCliSchema(),
   )
 }

@@ -40,3 +40,18 @@ enum SortOrder {
   asc
   desc
 }
+
+type Mutation {
+  createUser(input: UserCreateInputArg!): User!
+  updateUser(where: UserWhereUniqueInputArg!, input: UserUpdateInputArg!): User!
+}
+
+input UserCreateInputArg {
+  email: String!
+  name: String
+}
+
+input UserUpdateInputArg {
+  email: String!
+  name: String
+}

@@ -82,12 +82,12 @@ export abstract class ${serviceName} {
   return cls
 }
 
-export const generateService = async ({ name }) => {
-  await fs.promises.mkdir(path.join('./generated', `${name.toLowerCase()}`), {
+export const generateService = async ({ name, output }) => {
+  await fs.promises.mkdir(path.join(output, `${name.toLowerCase()}`), {
     recursive: true,
   })
   await fs.promises.writeFile(
-      path.join('./generated', `${name.toLowerCase()}`, `${name.toLowerCase()}.service.ts`),
+      path.join(output, `${name.toLowerCase()}`, `${name.toLowerCase()}.service.ts`),
       serviceSchema({ name }),
   )
 }

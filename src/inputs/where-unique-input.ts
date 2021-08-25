@@ -24,12 +24,12 @@ ${orderedFields.map(field => `  ${fieldNameOptional(field)}`).join('\n')}
   return cls
 }
 
-export const generateWhereUniqueInputType = async ({ name, fields }) => {
-  await fs.promises.mkdir(path.join('./generated', `${name.toLowerCase()}`, 'inputs'), {
+export const generateWhereUniqueInputType = async ({ name, fields, output }) => {
+  await fs.promises.mkdir(path.join(output, `${name.toLowerCase()}`, 'inputs'), {
     recursive: true,
   })
   await fs.promises.writeFile(
-      path.join('./generated', `${name.toLowerCase()}`, 'inputs', `${name.toLowerCase()}-where-unique.input.ts`),
+      path.join(output, `${name.toLowerCase()}`, 'inputs', `${name.toLowerCase()}-where-unique.input.ts`),
       whereUniqueInputSchema({ name, fields }),
   )
 }

@@ -16,12 +16,12 @@ const prismaModuleSchema = () => {
   return cls
 }
 
-export const generatePrismaModule = async () => {
-  await fs.promises.mkdir(path.join('./generated', 'prisma'), {
+export const generatePrismaModule = async ({ output }) => {
+  await fs.promises.mkdir(path.join(output, 'prisma'), {
     recursive: true,
   })
   await fs.promises.writeFile(
-      path.join('./generated', 'prisma', 'prisma.module.ts'),
+      path.join(output, 'prisma', 'prisma.module.ts'),
       prismaModuleSchema(),
   )
 }

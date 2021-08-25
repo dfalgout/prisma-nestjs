@@ -7,16 +7,20 @@ const resolverSchema = ({ name }) => {
   const serviceName = `${lowercasedName}Service`
   const whereUniqueInput = `${name}WhereUniqueInputArg`
   const listInput = `${name}ListInputArg`
-  const whereInput = `${name}WhereInputArg`
-  const orderByInput = `${name}OrderByInputArg`
+  const createInput = `${name}CreateInputArg`
+  const createInputKey = `${lowercasedName}CreateInputArg`
+  const userUpdateInputArg = `${name}UpdateInputArg`
+  const userUpdateInputArgKey = `${lowercasedName}UpdateInputArg`
   const whereUniqueInputKey = `${lowercasedName}WhereUniqueInputArg`
   const listInputKey = `${lowercasedName}ListInputArg`
   const cls = `import { NotFoundException, PreconditionFailedException } from '@nestjs/common'
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { ${name}CRUDService } from './${lowercasedName}.service'
 import { ${entity} } from './${lowercasedName}.entity'
-import { UserWhereUniqueInputArg } from './inputs/user-where-unique.input'
+import { ${name}WhereUniqueInputArg } from './inputs/${lowercasedName}-where-unique.input'
 import { ${name}ListInputArg } from './inputs/${lowercasedName}-list.input'
+import { ${name}CreateInputArg } from './inputs/${lowercasedName}-create.input'
+import { ${name}UpdateInputArg } from './inputs/${lowercasedName}-update.input'
 
 @Resolver(() => ${entity})
 export abstract class ${name}CRUDResolver {
@@ -41,18 +45,37 @@ export abstract class ${name}CRUDResolver {
     if (!${lowercasedName}s) throw new NotFoundException('No ${name}s not found')
     return ${lowercasedName}s
   }
+
+  @Mutation(() => ${entity})
+  async create${name}(
+    @Args('input') ${createInputKey}: ${createInput},
+  ): Promise<${entity} | null> {
+    const ${lowercasedName} = await this.${serviceName}.create${name}(${createInputKey})
+    if (!${lowercasedName}) throw new PreconditionFailedException('Failed to create ${name}')
+    return ${lowercasedName}
+  }
+
+  @Mutation(() => ${entity})
+  async update${name}(
+    @Args('input') ${userUpdateInputArgKey}: ${userUpdateInputArg},
+    @Args('where') ${whereUniqueInputKey}: ${whereUniqueInput},
+  ): Promise<${entity} | null> {
+    const ${lowercasedName} = await this.${serviceName}.update${name}(${userUpdateInputArgKey}, ${whereUniqueInputKey})
+    if (!${lowercasedName}) throw new PreconditionFailedException('Failed to update ${name}')
+    return ${lowercasedName}
+  }
 }
 `
 
   return cls
 }
 
-export const generateResolver = async ({ name }) => {
-  await fs.promises.mkdir(path.join('./generated', `${name.toLowerCase()}`), {
+export const generateResolver = async ({ name, output }) => {
+  await fs.promises.mkdir(path.join(output, `${name.toLowerCase()}`), {
     recursive: true,
   })
   await fs.promises.writeFile(
-      path.join('./generated', `${name.toLowerCase()}`, `${name.toLowerCase()}.resolver.ts`),
+      path.join(output, `${name.toLowerCase()}`, `${name.toLowerCase()}.resolver.ts`),
       resolverSchema({ name }),
   )
 }

@@ -12,6 +12,8 @@ generator client {
 
 generator gen {
   provider = "node ../dist/index.js"
+  output = "../@generated"
+  override = true
 }
 
 model User {
